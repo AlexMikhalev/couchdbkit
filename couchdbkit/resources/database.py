@@ -169,9 +169,26 @@ class Database(CouchDBResource):
          return self.delete("%s/%s" % (escape_docid(doc['_id']), name), 
                         rev=doc['_rev'])
                         
-    
+    def all_docs(self, **params):
+        if 'keys' in params:
+            payload = json.dump({keys: params.pop('keys')})
+            return self.post(view_path, payload=payload, **params)
+        
+        return self.get('_all_docs', **params)
          
-    
+    def view(self, view_name, **params):
+        if isinstance(view_name, tuple):
+            (dname, vname) = view_name
+        else:        
+            view_name = view_name.split('/')
+            dname = view_name.pop(0)
+            vname = '/'.join(view_name)
+            
+        view_path = '_design/%s/_view/%s' % (dname, vname)
+        if 'keys' in params:
+            payload = json.dump({keys: params.pop('keys')})
+            return self.post(view_path, payload=payload, **params)
+        return self.get(view_path, **params)
         
 
 

@@ -24,7 +24,8 @@ class Node(CouchDbResource):
 
         @param source: str, URI or dbname of the source
         @param target: str, URI or dbname of the target
-        @param continuous: boolean, default is False, set the type of replication
+        @param continuous: boolean, default is False, 
+        set the type of replication
 
         More info about replication here :
         http://wiki.apache.org/couchdb/Replication
