@@ -3,7 +3,7 @@
 # This file is part of couchdbkit released under the MIT license. 
 # See the NOTICE for more information.
 
-
+from restkit import __version__
 from restkit import Resource, HttpConnection, ResourceError
 from restkit.util importurl_quote
 
@@ -14,19 +14,19 @@ try:
     from simplejson import json
 except ImportError:
     import json
+    
+USER_AGENT = "couchdbkit/%s" % __version__
 
 class CouchDBResponse(HttpResponse):
-    
+    """ HttpResponse object with a json_body property """
     
     @property
     def json_body(self):
-        try:
-            return json.load(self.body_file)
-        except ValueError:
-            return self.body
-            
+        return json.load(self.body_file)
 
 class CouchDBResource(Resource):
+    """ basic CouchDB resource to return a CouchDBResponse and
+    handle errors."""
     
     def __init__(self, uri, **client_opts):
         Resource.__init__(self, uri=uri, response_class=CouchDBResponse,
